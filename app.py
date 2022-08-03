@@ -1,0 +1,123 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "9dc6feb6",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from flask import Flask,request,render_template"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "eb0a4e43",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import joblib"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "5f25b0f3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "app=Flask(__name__)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "0427e6ec",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "@app.route(\"/\",methods=[\"GET\",\"POST\"])\n",
+    "def index():\n",
+    "    if request.method==\"POST\":\n",
+    "        rates=float(request.form.get(\"rates\"))\n",
+    "        print(rates)\n",
+    "        model1=joblib.load(\"regression\")\n",
+    "        r1=model1.predict([[rates]])\n",
+    "        model2=joblib.load(\"tree\")\n",
+    "        r2=model2.predict([[rates]])\n",
+    "        return(render_template(\"index.html\",result1=r1,result2=r2))\n",
+    "    else:\n",
+    "        return(render_template(\"index.html\",result1=\"Waiting\",result2=\"Waiting\"))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "ea1b4e3f",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      " * Serving Flask app \"__main__\" (lazy loading)\n",
+      " * Environment: production\n",
+      "\u001b[31m   WARNING: This is a development server. Do not use it in a production deployment.\u001b[0m\n",
+      "\u001b[2m   Use a production WSGI server instead.\u001b[0m\n",
+      " * Debug mode: off\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      " * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)\n",
+      "127.0.0.1 - - [03/Aug/2022 17:39:03] \"GET / HTTP/1.1\" 200 -\n",
+      "127.0.0.1 - - [03/Aug/2022 17:39:11] \"POST / HTTP/1.1\" 200 -\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "1.4\n"
+     ]
+    }
+   ],
+   "source": [
+    "if __name__==\"__main__\":\n",
+    "    app.run()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "a162f5bf",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.11"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
